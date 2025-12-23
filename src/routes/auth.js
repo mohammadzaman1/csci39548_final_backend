@@ -6,6 +6,7 @@ import { prisma } from "../prisma.js";
 const router = Router();
 
 router.post("/register", async (req, res) => {
+    console.log("REGISTER HIT", req.body);
    try {
       const { name, email, password } = req.body;
 
@@ -61,9 +62,11 @@ router.post("/login", async (req, res) => {
       });
 
       res.json({ user, token });
-   } catch {
-      res.status(500).json({ message: "Login failed" });
+   } catch (e) {
+      console.error("REGISTER ERROR:", e);
+      res.status(500).json({ message: "Register failed", error: String(e) });
    }
+
 });
 
 export default router;
