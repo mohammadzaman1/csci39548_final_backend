@@ -5,10 +5,37 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client"
-  output   = "../generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
 }
+
+
+
+model User {
+  id           Int           @id @default(autoincrement())
+  name         String?
+  email        String        @unique
+  passwordHash String
+  applications Application[]
+  createdAt    DateTime      @default(now())
+}
+
+model Application {
+  id           Int      @id @default(autoincrement())
+  userId       Int
+  internshipId Int
+  title        String
+  company      String
+  location     String
+  status       String   @default("Saved")
+  createdAt    DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@unique([userId, internshipId]) // one saved record per internship per user
+}
+
